@@ -7,6 +7,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.contrib.auth import authenticate
 from .tasks import sendMailCelery
+import json
+from rest_framework import generics
+
 
 # register
 @api_view(["POST"])
@@ -50,3 +53,24 @@ def sendMail(request):
         return Response({"message":"Mail Sent","status":True},status=status.HTTP_200_OK)
     except:
         return Response({"message":"Mail failed","data":{},"status":False},status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def userListt(request):
+    try:
+        queryset = CustomUser.objects.all()
+        serializer = UserSerializer(queryset)
+        print(serializer.data)
+        #data=json.dumps(serializer.data)
+        return Response({"msg":"user list","status":True,"data":{serializer.data}},status=status.HTTP_200_OK)
+    except:
+        return Response({"message":"Something Went Wrong","data":{},"status":False},status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class userList(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]

@@ -6,4 +6,6 @@ urlpatterns = [
     path('register/',RegistrationView,name="register"),
     path('login/',login,name="login"),
     path('mail/',sendMail,name="mail"),
+    path('list/',userList.as_view(),name="users"),
+
 ]
